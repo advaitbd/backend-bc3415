@@ -1,4 +1,5 @@
 # app/auth/crud.py
+import uuid
 from sqlalchemy.orm import Session
 from app.auth.models import User
 from app.auth.schemas import UserCreate, UserUpdate
@@ -15,7 +16,7 @@ def get_user_by_email(db: Session, email: str):
 def create_user(db: Session, user: UserCreate):
     hashed_password = pwd_context.hash(user.password)
     db_user = User(
-        user_id=user.user_id,
+        user_id=str(uuid.uuid4()),  # Generate a new UUID for user_id
         email=user.email,
         password_hash=hashed_password,
         name=user.name,

@@ -1,7 +1,8 @@
 # app/auth/models.py
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from app.common.database import Base
+from datetime import datetime
 
 class User(Base):
     __tablename__ = "users"

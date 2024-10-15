@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from app.common.database import Base
 
 class UserProfile(Base):
-    __tablename__ = "user_profiles"
+    __tablename__ = "profiles"
 
     profile_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"), unique=True, index=True)

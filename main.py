@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from app.auth import routes as auth_routes  # Import auth routes
+from app.user_profile import routes as user_profile_routes  # Import user_profile routes
 from app.common.database import database
 
 app = FastAPI()
 
 # Include routers
 app.include_router(auth_routes.router, prefix="/api/auth", tags=["auth"])
-
-app.include_router(user_profile_routes.router, prefix="/api/user_profiles", tags=["user_profiles"])
+app.include_router(user_profile_routes.router, prefix="/api/user_profile", tags=["user_profile"])
 
 @app.get("/")
 def read_root():
