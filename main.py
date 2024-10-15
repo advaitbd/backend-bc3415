@@ -8,6 +8,7 @@ app = FastAPI()
 # Include routers
 app.include_router(auth_routes.router, prefix="/api/auth", tags=["auth"])
 app.include_router(user_profile_routes.router, prefix="/api/user_profile", tags=["user_profile"])
+app.include_router(chat_routes.router, prefix="/api/chat", tags=["chat"])
 
 @app.get("/")
 def read_root():
