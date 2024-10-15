@@ -11,3 +11,4 @@ python-dotenv
 pyco
 passlib
 pydantic-settings
+openai
