@@ -6,9 +6,7 @@ databases
 pydantic
 psycopg2
 python-jose
-passlib[bcrypt]
-python-dotenv
-pyco
 passlib
+python-dotenv
 pydantic-settings
 openai
