@@ -1,24 +1,34 @@
-# app/auth/controllers.py
-from passlib.context import CryptContext
+# app/user_profile/controllers.py
 from sqlalchemy.orm import Session
-from app.common.database import SessionLocal
-from app.auth.models import User
-from app.auth.crud import get_user_by_email, create_user
-from app.auth.schemas import UserCreate
+from app.user_profile.crud import (
+    get_user_profile,
+    get_user_profile_by_user_id,
+    create_user_profile,
+    update_user_profile,
+    delete_user_profile,
+)
+from app.user_profile.schemas import UserProfileCreate, UserProfileUpdate
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+def create_new_user_profile(db: Session, profile: UserProfileCreate):
+    db_profile = get_user_profile_by_user_id(db, user_id=profile.user_id)
+    if db_profile:
+        raise ValueError("User profile already exists")
+    return create_user_profile(db=db, profile=profile)
 
-async def register_user(user: UserCreate):
-    async with SessionLocal() as session:
-        db_user = get_user_by_email(session, email=user.email)
-        if db_user:
-            raise ValueError("Email already registered")
-        return create_user(session, user)
+def read_user_profile(db: Session, profile_id: int):
+    db_profile = get_user_profile(db, profile_id=profile_id)
+    if db_profile is None:
+        raise ValueError("User profile not found")
+    return db_profile
 
-async def login_user(email: str, password: str):
-    async with SessionLocal() as session:
-        db_user = get_user_by_email(session, email=email)
-        if not db_user or not pwd_context.verify(password, db_user.password_hash):
-            raise ValueError("Invalid credentials")
-        # Logic for generating a token can be added here
-        return db_user
+def update_existing_user_profile(db: Session, profile_id: int, profile: UserProfileUpdate):
+    db_profile = update_user_profile(db=db, profile_id=profile_id, profile=profile)
+    if db_profile is None:
+        raise ValueError("User profile not found")
+    return db_profile
+
+def delete_existing_user_profile(db: Session, profile_id: int):
+    db_profile = delete_user_profile(db=db, profile_id=profile_id)
+    if db_profile is None:
+        raise ValueError("User profile not found")
+    return db_profile
