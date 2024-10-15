@@ -1,19 +1,24 @@
+# app/auth/controllers.py
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from app.common.database import SessionLocal
 from app.auth.models import User
+from app.auth.crud import get_user_by_email, create_user
+from app.auth.schemas import UserCreate
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-async def register_user(username: str, password: str):
-    hashed_password = pwd_context.hash(password)
-    user = User(username=username, hashed_password=hashed_password)
+async def register_user(user: UserCreate):
     async with SessionLocal() as session:
-        session.add(user)
-        await session.commit()
-        await session.refresh(user)
-    return user
+        db_user = get_user_by_email(session, email=user.email)
+        if db_user:
+            raise ValueError("Email already registered")
+        return create_user(session, user)
 
-async def login_user(username: str, password: str):
-    # Logic for verifying user and generating a token
-    pass
+async def login_user(email: str, password: str):
+    async with SessionLocal() as session:
+        db_user = get_user_by_email(session, email=email)
+        if not db_user or not pwd_context.verify(password, db_user.password_hash):
+            raise ValueError("Invalid credentials")
+        # Logic for generating a token can be added here
+        return db_user

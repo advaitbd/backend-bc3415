@@ -5,7 +5,13 @@ from app.common.database import database
 app = FastAPI()
 
 # Include routers
-app.include_router(auth_routes.router, prefix="/auth", tags=["auth"])
+app.include_router(auth_routes.router, prefix="/api/auth", tags=["auth"])
+
+app.include_router(user_profile_routes.router, prefix="/api/user_profiles", tags=["user_profiles"])
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the Investment App API"}
 
 @app.on_event("startup")
 async def startup():

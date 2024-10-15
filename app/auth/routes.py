@@ -1,12 +1,29 @@
-from fastapi import APIRouter, Depends
-from app.auth.controllers import login_user, register_user
+# app/auth/routes.py
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.auth.controllers import register_user, login_user
+from app.auth.schemas import UserCreate, UserResponse
+from app.common.database import SessionLocal
 
 router = APIRouter()
 
-@router.post("/register")
-async def register(username: str, password: str):
-    return await register_user(username, password)
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@router.post("/register", response_model=UserResponse)
+async def register(user: UserCreate, db: Session = Depends(get_db)):
+    try:
+        return await register_user(user)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/login")
-async def login(username: str, password: str):
-    return await login_user(username, password)
+async def login(email: str, password: str, db: Session = Depends(get_db)):
+    try:
+        return await login_user(email, password)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
