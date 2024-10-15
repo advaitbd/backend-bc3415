@@ -11,8 +11,8 @@
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/investment-app-api.git
-    cd investment-app-api
+    git clone https://github.com/advaitbd/backend-bc3415.git
+    cd backend-bc3415
     ```
 
 2. **Create a virtual environment and activate it:**
