@@ -7,10 +7,10 @@ import logging
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
-def send_message_to_ai(message: str, context: dict) -> str:
+def send_message_to_ai(message: str, context: str) -> str:
     # You can customize the prompt based on the context if needed
     messages = [
-        {"role": "system", "content": f"Context: {context}"},
+        {"role": "system", "content": f"Context: You are a financial advisor and are providing guidance about this article: {context}"},
         {"role": "user", "content": message}
     ]
     response = client.chat.completions.create(
