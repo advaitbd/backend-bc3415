@@ -1,19 +1,26 @@
 # app/chat/controllers.py
-import openai
 from app.chat.schemas import ChatRequest, ChatResponse
+from openai import OpenAI
+from app.common.config import settings
+import logging
 
-# Initialize OpenAI API
-openai.api_key = "your_openai_api_key"
+
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 def send_message_to_ai(message: str, context: dict) -> str:
     # You can customize the prompt based on the context if needed
-    prompt = f"Context: {context}\nUser: {message}\nAI:"
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=150
+    messages = [
+        {"role": "system", "content": f"Context: {context}"},
+        {"role": "user", "content": message}
+    ]
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=messages,
     )
-    return response.choices[0].text.strip()
+
+    logging.info(response)
+
+    return response.choices[0].message.content
 
 def handle_chat_request(chat_request: ChatRequest) -> ChatResponse:
     response = send_message_to_ai(chat_request.message, chat_request.context)
