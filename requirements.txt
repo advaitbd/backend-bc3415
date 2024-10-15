@@ -4,5 +4,10 @@ sqlalchemy
 asyncpg
 databases
 pydantic
+psycopg2
 python-jose
 passlib[bcrypt]
+python-dotenv
+pyco
+passlib
+pydantic-settings

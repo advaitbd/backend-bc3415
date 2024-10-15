@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.auth import routes as auth_routes  # Import auth routes
+from app.common.database import database
 
 app = FastAPI()
 
