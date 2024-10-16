@@ -13,6 +13,9 @@ from app.common.database import database
 
 app = FastAPI()
 
+# Wee Din commented this
+
+
 # Include routers
 app.include_router(auth_routes.router, prefix="/api/auth", tags=["auth"])
 app.include_router(user_profile_routes.router, prefix="/api/user_profile", tags=["user_profile"])
