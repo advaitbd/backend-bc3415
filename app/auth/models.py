@@ -16,3 +16,7 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     profile = relationship("UserProfile", back_populates="user", uselist=False)
+    portfolios = relationship("Portfolio", back_populates="user")
+    transactions = relationship("Transaction", back_populates="user")
+    nfts = relationship("NFT", back_populates="owner")
+    recommendations = relationship("StockRecommendation", back_populates="user")

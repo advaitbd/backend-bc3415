@@ -1,41 +1,96 @@
 ## Getting Started
 
-### Prerequisites
+# Project Setup and Database Migration Guide
 
-- Python 3.8+
-- PostgreSQL (or any other database supported by SQLAlchemy)
-- [OpenAI API Key](https://beta.openai.com/signup/)
+This guide provides step-by-step instructions to set up your project, configure the database, and manage database migrations using Alembic and Docker.
 
-### Installation
+## Prerequisites
 
-1. **Clone the repository:**
+Ensure you have the following installed on your system:
+- Python (preferably 3.6+)
+- Docker
+- Docker Compose
 
-    ```bash
-    git clone https://github.com/advaitbd/backend-bc3415.git
-    cd backend-bc3415
-    ```
+## Installation and Setup
 
-2. **Create a virtual environment and activate it:**
+### Step 1: Install Alembic
 
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
+First, install Alembic, a lightweight database migration tool for usage with the SQLAlchemy Database Toolkit for Python.
 
-3. **Install the dependencies:**
+```sh
+pip install alembic
+```
+### Step 2: Configure Database URL
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+#### Update `alembic.ini`
 
-4. **Set up the environment variables:**
+Set the SQLAlchemy URL in the `alembic.ini` file to point to your local PostgreSQL instance.
 
-    Create a `.env` file in the root directory and add the following variables:
+```ini
+# alembic.ini
+[alembic]
+sqlalchemy.url = postgresql://postgres:postgres@localhost:5432/postgres
+```
 
-    ```env
-    DATABASE_URL=postgresql://user:password@localhost/dbname
-    SECRET_KEY=your_secret_key
-    ALGORITHM=HS256
-    ACCESS_TOKEN_EXPIRE_MINUTES=30
-    OPENAI_API_KEY=your_openai_api_key
-    ```
+#### Set your `.env` File
+
+Create a `.env` file in the root directory of your project and add the following environment variables.
+
+```env
+# .env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+SECRET_KEY=[Ask Advait]
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+OPENAI_API_KEY=[Get your own!]
+
+```
+
+### Step 3: Build and Run the Database
+
+Use Docker Compose to build and run the PostgreSQL database container.
+
+```sh
+docker-compose up -d db
+```
+
+### Step 4: Generate the Initial Migration
+
+Generate the initial database migration script using Alembic.
+
+```sh
+alembic revision --autogenerate -m "Initial migration"
+```
+
+### Step 5: Apply the Migration
+
+Apply the generated migration to update the database schema.
+
+```sh
+alembic upgrade head
+```
+
+### Step 6: Update Database URLs for Docker
+
+After applying the migration, update the database URLs to point to the Docker container.
+
+```sh
+set sqlalchemy.url=postgresql://postgres:postgres@db:5432/postgres
+set DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+```
+
+### Step 7: Build and Run Docker Containers
+
+Build and run the Docker containers for your application.
+
+```sh
+docker-compose up -d --build
+```
+
+### Step 8: Stop the Database Container
+
+When you are done, stop the database container.
+
+```sh
+docker-compose down
+```

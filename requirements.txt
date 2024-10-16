@@ -4,9 +4,11 @@ sqlalchemy
 asyncpg
 databases
 pydantic
-psycopg2
+pydantic[email]
+psycopg2-binary
 python-jose
 passlib
 python-dotenv
 pydantic-settings
 openai
+alembic
