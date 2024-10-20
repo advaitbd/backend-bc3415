@@ -1,0 +1,8 @@
+.env
+venv
+alembic/versions
+__pycache__
+pyrightconfig.json
+Dockerfile
+docker-compose.yml
+wait-for-it.sh
