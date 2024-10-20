@@ -28,14 +28,14 @@ def create_news_article(article: NewsArticleCreate, db: Session = Depends(get_db
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/news_article/{article_id}", response_model=NewsArticleResponse)
-def read_news_article(article_id: int, db: Session = Depends(get_db)):
+def read_news_article_route(article_id: int, db: Session = Depends(get_db)):
     try:
         return read_news_article(db, article_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 @router.get("/news_articles/", response_model=list[NewsArticleResponse])
-def read_all_news_articles(db: Session = Depends(get_db)):
+def read_all_news_articles_route(db: Session = Depends(get_db)):
     return read_all_news_articles(db)
 
 @router.put("/news_article/{article_id}", response_model=NewsArticleResponse)

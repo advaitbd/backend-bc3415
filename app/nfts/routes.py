@@ -28,14 +28,14 @@ def create_nft(nft: NFTCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/nft/{nft_id}", response_model=NFTResponse)
-def read_nft(nft_id: int, db: Session = Depends(get_db)):
+def read_nft_route(nft_id: int, db: Session = Depends(get_db)):
     try:
         return read_nft(db, nft_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 @router.get("/nfts/user/{user_id}", response_model=list[NFTResponse])
-def read_nfts_by_user(user_id: str, db: Session = Depends(get_db)):
+def read_nfts_by_user_route(user_id: str, db: Session = Depends(get_db)):
     return read_nfts_by_user(db, user_id)
 
 @router.put("/nft/{nft_id}", response_model=NFTResponse)

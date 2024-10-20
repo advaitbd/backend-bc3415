@@ -28,14 +28,14 @@ def create_transaction(transaction: TransactionCreate, db: Session = Depends(get
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/transaction/{transaction_id}", response_model=TransactionResponse)
-def read_transaction(transaction_id: int, db: Session = Depends(get_db)):
+def read_transaction_route(transaction_id: int, db: Session = Depends(get_db)):
     try:
         return read_transaction(db, transaction_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 @router.get("/transactions/user/{user_id}", response_model=list[TransactionResponse])
-def read_transactions_by_user(user_id: str, db: Session = Depends(get_db)):
+def read_transactions_by_user_route(user_id: str, db: Session = Depends(get_db)):
     return read_transactions_by_user(db, user_id)
 
 @router.put("/transaction/{transaction_id}", response_model=TransactionResponse)

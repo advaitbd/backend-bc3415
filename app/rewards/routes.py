@@ -28,14 +28,14 @@ def create_reward(reward: RewardCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/reward/{reward_id}", response_model=RewardResponse)
-def read_reward(reward_id: int, db: Session = Depends(get_db)):
+def read_reward_route(reward_id: int, db: Session = Depends(get_db)):
     try:
         return read_reward(db, reward_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 @router.get("/reward/nft/{nft_id}", response_model=RewardResponse)
-def read_reward_by_nft(nft_id: int, db: Session = Depends(get_db)):
+def read_reward_by_nft_route(nft_id: int, db: Session = Depends(get_db)):
     return read_reward_by_nft(db, nft_id)
 
 @router.put("/reward/{reward_id}", response_model=RewardResponse)

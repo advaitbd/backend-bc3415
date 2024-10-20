@@ -27,7 +27,7 @@ def create_stock(stock: StockCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/stock/{stock_id}", response_model=StockResponse)
-def read_stock(stock_id: int, db: Session = Depends(get_db)):
+def read_stock_route(stock_id: int, db: Session = Depends(get_db)):
     try:
         return read_stock(db, stock_id)
     except ValueError as e:
