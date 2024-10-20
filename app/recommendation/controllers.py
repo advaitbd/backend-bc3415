@@ -12,13 +12,13 @@ from app.recommendation.schemas import StockRecommendationCreate, StockRecommend
 def create_new_recommendation(db: Session, recommendation: StockRecommendationCreate):
     return create_recommendation(db=db, recommendation=recommendation)
 
-def read_recommendation(db: Session, recommendation_id: int):
+def read_recommendation_by_id(db: Session, recommendation_id: int):
     db_recommendation = get_recommendation(db, recommendation_id=recommendation_id)
     if db_recommendation is None:
         raise ValueError("Recommendation not found")
     return db_recommendation
 
-def read_recommendations_by_user(db: Session, user_id: str):
+def read_recommendations_by_user_id(db: Session, user_id: str):
     return get_recommendations_by_user_id(db, user_id=user_id)
 
 def update_existing_recommendation(db: Session, recommendation_id: int, recommendation: StockRecommendationUpdate):
