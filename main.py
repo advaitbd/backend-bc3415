@@ -10,8 +10,18 @@ from app.nfts import routes as nft_routes
 from app.rewards import routes as reward_routes
 from app.news_articles import routes as news_article_routes
 from app.common.database import database
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Enable CORS for all domains
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 # Include routers
 app.include_router(auth_routes.router, prefix="/api/auth", tags=["auth"])
