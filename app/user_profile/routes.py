@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.user_profile.controllers import (
     create_new_user_profile,
     read_user_profile,
+    read_user_profile_by_user_id,
     update_existing_user_profile,
     delete_existing_user_profile,
 )
@@ -30,6 +31,14 @@ def create_profile(profile: UserProfileCreate, db: Session = Depends(get_db)):
 def read_profile(profile_id: int, db: Session = Depends(get_db)):
     try:
         return read_user_profile(db, profile_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+# Get profile by user_id
+@router.get("/user_profile/user/{user_id}", response_model=UserProfileResponse)
+def read_profile_by_user_id(user_id: str, db: Session = Depends(get_db)):
+    try:
+        return read_user_profile_by_user_id(db, user_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 

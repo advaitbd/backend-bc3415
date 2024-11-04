@@ -21,6 +21,12 @@ def read_user_profile(db: Session, profile_id: int):
         raise ValueError("User profile not found")
     return db_profile
 
+def read_user_profile_by_user_id(db: Session, user_id: str):
+    db_profile = get_user_profile_by_user_id(db, user_id=user_id)
+    if db_profile is None:
+        raise ValueError("User profile not found")
+    return db_profile
+
 def update_existing_user_profile(db: Session, profile_id: int, profile: UserProfileUpdate):
     db_profile = update_user_profile(db=db, profile_id=profile_id, profile=profile)
     if db_profile is None:
