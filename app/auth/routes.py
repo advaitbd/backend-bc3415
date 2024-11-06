@@ -20,7 +20,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/login")
+@router.post("/login", response_model=UserResponse)
 def login(email: str, password: str, db: Session = Depends(get_db)):
     try:
         return login_user(email, password)
