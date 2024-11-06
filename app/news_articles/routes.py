@@ -6,7 +6,7 @@ from app.news_articles.controllers import (
     read_news_article,
     read_all_news_articles,
     update_existing_news_article,
-    delete_existing_news_article,sn
+    delete_existing_news_article
 )
 from app.news_articles.schemas import NewsArticleCreate, NewsArticleUpdate, NewsArticleResponse
 from app.common.database import SessionLocal
