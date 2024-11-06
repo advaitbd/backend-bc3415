@@ -22,10 +22,10 @@ class NewsArticleResponse(BaseModel):
     url: str
     site: str
     time: int
-    favicon_url: str
-    description: str
-    tags: List[str]
-    tickers: List[str]
+    favicon_url: Optional[str] = None
+    description: Optional[str] = None
+    tags: Optional[List[str]] = []
+    tickers: Optional[List[str]] = []
 
 def get_db():
     db = SessionLocal()
