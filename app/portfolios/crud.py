@@ -19,10 +19,20 @@ def create_portfolio(db: Session, portfolio: PortfolioCreate):
 def update_portfolio(db: Session, portfolio_id: int, portfolio: PortfolioUpdate):
     db_portfolio = get_portfolio(db, portfolio_id)
     if db_portfolio:
+        # Update the portfolio fields
         for key, value in portfolio.dict().items():
             setattr(db_portfolio, key, value)
+        
+        # Commit to get the updated_at value
         db.commit()
         db.refresh(db_portfolio)
+        
+        # If created_at is None, set it to the same value as updated_at
+        if db_portfolio.created_at is None:
+            db_portfolio.created_at = db_portfolio.updated_at
+            db.commit()
+            db.refresh(db_portfolio)
+        
     return db_portfolio
 
 def delete_portfolio(db: Session, portfolio_id: int):

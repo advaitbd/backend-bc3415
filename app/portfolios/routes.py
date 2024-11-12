@@ -7,6 +7,7 @@ from app.portfolios.controllers import (
     read_portfolios_by_user,
     update_existing_portfolio,
     delete_existing_portfolio,
+    rebalance_portfolio,
 )
 from app.portfolios.schemas import PortfolioCreate, PortfolioUpdate, PortfolioResponse
 from app.common.database import SessionLocal
@@ -49,5 +50,12 @@ def update_portfolio(portfolio_id: int, portfolio: PortfolioUpdate, db: Session 
 def delete_portfolio(portfolio_id: int, db: Session = Depends(get_db)):
     try:
         return delete_existing_portfolio(db, portfolio_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@router.post("/portfolio/{portfolio_id}/rebalance", response_model=PortfolioResponse)
+def rebalance_portfolio_route(portfolio_id: int, db: Session = Depends(get_db)):
+    try:
+        return rebalance_portfolio(db, portfolio_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))

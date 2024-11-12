@@ -7,6 +7,10 @@ WORKDIR /app
 # Install PostgreSQL development libraries and psql client
 RUN apt-get update && apt-get install -y \
     gcc \
+    libatlas-base-dev \ 
+    liblapack-dev \
+    pkg-config \
+    cmake \
     libpq-dev \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*

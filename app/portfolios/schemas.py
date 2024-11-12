@@ -1,5 +1,5 @@
 # app/portfolios/schemas.py
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from datetime import datetime
 
 class PortfolioBase(BaseModel):
@@ -21,3 +21,8 @@ class PortfolioResponse(PortfolioBase):
 
     class Config:
         orm_mode = True
+    @validator('created_at', 'updated_at', pre=True, always=True)
+    def validate_datetime(cls, v):
+        if v is None:
+            raise ValueError("Datetime field cannot be None")
+        return v
