@@ -10,6 +10,7 @@ from app.portfolios.crud import (
 from app.portfolios.schemas import PortfolioCreate, PortfolioUpdate, RebalanceSuggestion
 from datetime import datetime, timedelta
 from app.portfolios.optimisation_model.portfolio_optimizer import optimize_portfolio
+from decimal import Decimal
 
 def create_new_portfolio(db: Session, portfolio: PortfolioCreate):
     return create_portfolio(db=db, portfolio=portfolio)
@@ -42,14 +43,14 @@ def calculate_rebalance_suggestion(db: Session, portfolio_id: int):
     existing_portfolio = read_portfolio(db, portfolio_id)
     current_composition = existing_portfolio.composition
     tickers = list(current_composition.keys())
-    
+
     # Set start and end dates for historical data
     start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
     end_date = datetime.now().strftime('%Y-%m-%d')
-    
+
     # Get the optimized composition and expected return
     optimised_composition, expected_return = optimize_portfolio(tickers, start_date, end_date, current_composition)
-    
+
     return RebalanceSuggestion(
         current_composition=current_composition,
         suggested_composition=optimised_composition,
@@ -61,16 +62,16 @@ def accept_portfolio_rebalance(db: Session, portfolio_id: int):
     # Get the suggestion first
     suggestion = calculate_rebalance_suggestion(db, portfolio_id)
     existing_portfolio = read_portfolio(db, portfolio_id)
-    
+
     # Create portfolio update object
     portfolio_update = PortfolioUpdate(
         user_id=existing_portfolio.user_id,
         composition=suggestion.suggested_composition,
         current_value=existing_portfolio.current_value,
-        forecasted_value=int(existing_portfolio.current_value * (1 + suggestion.expected_return/100))
+        forecasted_value=int(Decimal(str(existing_portfolio.current_value)) * (Decimal('1') + Decimal(str(suggestion.expected_return))/Decimal('100')))
     )
-    
+
     # Update the portfolio with the optimized composition
     updated_portfolio = update_portfolio(db, portfolio_id, portfolio_update)
-    
+
     return updated_portfolio

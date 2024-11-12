@@ -7,3 +7,4 @@ Dockerfile
 docker-compose.yml
 wait-for-it.sh
 Portfolio Optimization.ipynb
+.vercel
