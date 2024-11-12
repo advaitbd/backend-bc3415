@@ -44,7 +44,7 @@ def calculate_rebalance_suggestion(db: Session, portfolio_id: int):
     tickers = list(current_composition.keys())
     
     # Set start and end dates for historical data
-    start_date = (datetime.now() - timedelta(days=14)).strftime('%Y-%m-%d')
+    start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
     end_date = datetime.now().strftime('%Y-%m-%d')
     
     # Get the optimized composition and expected return
@@ -66,7 +66,8 @@ def accept_portfolio_rebalance(db: Session, portfolio_id: int):
     portfolio_update = PortfolioUpdate(
         user_id=existing_portfolio.user_id,
         composition=suggestion.suggested_composition,
-        current_value=existing_portfolio.current_value
+        current_value=existing_portfolio.current_value,
+        forecasted_value=int(existing_portfolio.current_value * (1 + suggestion.expected_return/100))
     )
     
     # Update the portfolio with the optimized composition
