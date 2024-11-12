@@ -13,3 +13,11 @@ pydantic-settings
 openai
 alembic
 requests
+numpy
+yfinance
+scipy
+datetime
+skfolio
+pymoo
+pytest
+statsmodels

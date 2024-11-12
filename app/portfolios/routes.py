@@ -7,8 +7,10 @@ from app.portfolios.controllers import (
     read_portfolios_by_user,
     update_existing_portfolio,
     delete_existing_portfolio,
+    calculate_rebalance_suggestion,
+    accept_portfolio_rebalance,
 )
-from app.portfolios.schemas import PortfolioCreate, PortfolioUpdate, PortfolioResponse
+from app.portfolios.schemas import PortfolioCreate, PortfolioUpdate, PortfolioResponse, RebalanceSuggestion
 from app.common.database import SessionLocal
 
 router = APIRouter()
@@ -49,5 +51,19 @@ def update_portfolio(portfolio_id: int, portfolio: PortfolioUpdate, db: Session 
 def delete_portfolio(portfolio_id: int, db: Session = Depends(get_db)):
     try:
         return delete_existing_portfolio(db, portfolio_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@router.get("/portfolio/{portfolio_id}/rebalance/suggestion", response_model=RebalanceSuggestion)
+def get_rebalance_suggestion(portfolio_id: int, db: Session = Depends(get_db)):
+    try:
+        return calculate_rebalance_suggestion(db, portfolio_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@router.post("/portfolio/{portfolio_id}/rebalance/accept", response_model=PortfolioResponse)
+def accept_rebalance_suggestion(portfolio_id: int, db: Session = Depends(get_db)):
+    try:
+        return accept_portfolio_rebalance(db, portfolio_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
