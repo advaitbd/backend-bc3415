@@ -61,7 +61,7 @@ def get_rebalance_suggestion(portfolio_id: int, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.post("/portfolio/{portfolio_id}/rebalance/accept", response_model=PortfolioResponse)
+@router.get("/portfolio/{portfolio_id}/rebalance/accept", response_model=PortfolioResponse)
 def accept_rebalance_suggestion(portfolio_id: int, db: Session = Depends(get_db)):
     try:
         return accept_portfolio_rebalance(db, portfolio_id)
