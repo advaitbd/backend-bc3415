@@ -19,3 +19,5 @@ scipy
 datetime
 skfolio
 pymoo
+pytest
+statsmodels

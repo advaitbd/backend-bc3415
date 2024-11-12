@@ -26,3 +26,10 @@ class PortfolioResponse(PortfolioBase):
         if v is None:
             raise ValueError("Datetime field cannot be None")
         return v
+    
+
+class RebalanceSuggestion(BaseModel):
+    current_composition: dict
+    suggested_composition: dict
+    expected_return: float
+    portfolio_id: int

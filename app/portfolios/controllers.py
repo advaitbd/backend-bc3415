@@ -7,7 +7,7 @@ from app.portfolios.crud import (
     update_portfolio,
     delete_portfolio,
 )
-from app.portfolios.schemas import PortfolioCreate, PortfolioUpdate
+from app.portfolios.schemas import PortfolioCreate, PortfolioUpdate, RebalanceSuggestion
 from datetime import datetime, timedelta
 from app.portfolios.optimisation_model.portfolio_optimizer import optimize_portfolio
 
@@ -37,7 +37,7 @@ def delete_existing_portfolio(db: Session, portfolio_id: int):
 
 
 # Business Logic for Rebalancing
-def rebalance_portfolio(db: Session, portfolio_id: int):
+def calculate_rebalance_suggestion(db: Session, portfolio_id: int):
     # Fetch the existing portfolio
     existing_portfolio = read_portfolio(db, portfolio_id)
     current_composition = existing_portfolio.composition
@@ -47,15 +47,26 @@ def rebalance_portfolio(db: Session, portfolio_id: int):
     start_date = (datetime.now() - timedelta(days=14)).strftime('%Y-%m-%d')
     end_date = datetime.now().strftime('%Y-%m-%d')
     
-    # Optimize the portfolio
-    optimised_composition = optimize_portfolio(tickers, start_date, end_date, current_composition)
+    # Get the optimized composition and expected return
+    optimised_composition, expected_return = optimize_portfolio(tickers, start_date, end_date, current_composition)
     
-    # Create a complete PortfolioUpdate object
+    return RebalanceSuggestion(
+        current_composition=current_composition,
+        suggested_composition=optimised_composition,
+        expected_return=expected_return,
+        portfolio_id=portfolio_id
+    )
+
+def accept_portfolio_rebalance(db: Session, portfolio_id: int):
+    # Get the suggestion first
+    suggestion = calculate_rebalance_suggestion(db, portfolio_id)
+    existing_portfolio = read_portfolio(db, portfolio_id)
+    
+    # Create portfolio update object
     portfolio_update = PortfolioUpdate(
         user_id=existing_portfolio.user_id,
-        composition=optimised_composition,
-        current_value=existing_portfolio.current_value,
-        forecasted_value=existing_portfolio.forecasted_value
+        composition=suggestion.suggested_composition,
+        current_value=existing_portfolio.current_value
     )
     
     # Update the portfolio with the optimized composition
